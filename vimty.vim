@@ -27,7 +27,10 @@ function! Typewriter ()
     let top  = midY - (g:pxH * (g:cy - g:topline)) - (g:pxH / 2)
 
     " Set it!
-    let k = system("bspc node -v ".left." ".top)
+    "
+    " TODO CENTER WINDOW
+    "
+    " let k = system("bspc node -v 0 0")
 
     call TypewriterMove()
 
