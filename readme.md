@@ -1,10 +1,10 @@
 # Vimty: A vim typewriter
 
-[Here's a video of it in action](https://dixonary.co.uk/s/typewriter-vim.mp4)
+[Here's a video of it in action](https://youtu.be/8ChbGvh-Cec)
 
 ## Dependencies
 
-* i3wm (to move the window from shell)
+* bspwm (to move the window from shell)
 * xrandr (to get screen info)
 * xwininfo, xdotool (to get window info)
 * vim >7.4 (for some of the buffer stuff)
