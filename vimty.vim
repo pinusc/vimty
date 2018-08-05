@@ -27,7 +27,7 @@ function! Typewriter ()
     let top  = midY - (g:pxH * (g:cy - g:topline)) - (g:pxH / 2)
 
     " Set it!
-    let k = system("i3-msg move window position".left."px ".top."px")
+    let k = system("bspc node -v ".left." ".top)
 
     call TypewriterMove()
 
@@ -46,18 +46,18 @@ function! TypewriterMove()
 
     " Account for negative 'leftness'
     if left > 0
-        let k = system("i3-msg move window left ".left."px ")
+        let k = system("bspc node -v -".left." 0")
     elseif left < 0
         let left  = 0 - left
-        let k = system("i3-msg move window right ".left."px ")
+        let k = system("bspc node -v ".left." 0")
     endif
 
     " Account for negative 'topness'
     if up > 0
-        let k = system("i3-msg move window up ".up."px ")
+        let k = system("bspc node -v 0 -".up)
     elseif up < 0
         let up  = 0 - up
-        let k = system("i3-msg move window down ".up."px ")
+        let k = system("bspc node -v 0 ".up)
     endif
 
     " Update values
