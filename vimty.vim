@@ -1,18 +1,36 @@
+
+" NOTE - on macOS, using chunkwm, this requires that the window be "floating" as defined by chunkwm !
+" it also requires chunkwm to have ability to control floating windows
+" (currently provided by a hacky bash script)
+
+let s:os_name = system("uname -s")
+
+if get(g:, "vimty_float_cmd", 0)
+    let s:float_cmd = g:vimty_float_cmd
+else
+    let s:float_cmd = "$HOME/.config/scripts/chunk_float.sh"
+endif
+
+" remove whitespace from split list
+function! s:Strip(inp)
+    return substitute(a:inp, " ", "", "")
+endfunction
+
 function! Typewriter ()
     let a:cursor_pos = getpos(".")
     let g:cx = a:cursor_pos[2]
     let g:cy = a:cursor_pos[1]
     let g:topline = line("w0")
 
-    " Screen size.
-    let mx = system("xrandr -q --current | head -n2 | tail -n1 | cut --delimiter=' ' -f4 | cut --delimiter='x' -f1")
-    let my = system("xrandr -q --current | head -n2 | tail -n1 | cut --delimiter=' ' -f4 | cut --delimiter='x' -f2 | cut --delimiter='+' -f1")
+    " mac os resolution
+    let mx = system("system_profiler SPDisplaysDataType|grep Resolution|cut -f1 -d 'x'|grep -o '[0-9]\+'")
+    let my = system("system_profiler SPDisplaysDataType|grep Resolution|cut -f2 -d 'x'|grep -o '[0-9]\+'")
 
-    " Current X window ID
-    let curwin = system("xdotool getactivewindow | head -n1 | awk '{printf $0}'")
-    " Current X window w,h
-    let winwidth = system("xwininfo -id " . curwin . " | grep Width | xargs | cut --delimiter=' ' -f2")
-    let winheight = system("xwininfo -id " . curwin . " | grep Height | xargs | cut --delimiter=' ' -f2")
+    " Current window w,h (make sure to strip whitespace after split)
+    let res_window = system("osascript -e 'tell application \"iTerm\" to get the bounds of the front window'")
+    let dims = map(split(res_window, ','), "s:Strip" . "(v:val)")
+    let winwidth =  dims[2] - dims[0]
+    let winheight = dims[3] - dims[1]
 
     " Figuring out character width&height
     let g:pxW = winwidth  / &columns
@@ -49,18 +67,18 @@ function! TypewriterMove()
 
     " Account for negative 'leftness'
     if left > 0
-        let k = system("bspc node -v -".left." 0")
+        let k = system(s:float_cmd . " move -x " . left)
     elseif left < 0
         let left  = 0 - left
-        let k = system("bspc node -v ".left." 0")
+        let k = system(s:float_cmd . " move +x ".left)
     endif
 
     " Account for negative 'topness'
     if up > 0
-        let k = system("bspc node -v 0 -".up)
+        let k = system(s:float_cmd . " move -y ".up)
     elseif up < 0
         let up  = 0 - up
-        let k = system("bspc node -v 0 ".up)
+        let k = system(s:float_cmd . " move +y ".up)
     endif
 
     " Update values
@@ -88,8 +106,8 @@ endfunction
 
 
 call Typewriter()
-autocmd InsertEnter * :call Typewriter()
-autocmd VimResized * :call Typewriter()
-autocmd CursorMoved * :call TypewriterMove()
+autocmd InsertEnter  * :call Typewriter()
+autocmd VimResized   * :call Typewriter()
+autocmd CursorMoved  * :call TypewriterMove()
 autocmd CursorMovedI * :call TypewriterMove()
 autocmd TextChangedI * :call TypeText()
