@@ -4,9 +4,10 @@
 
 ## Dependencies
 
-* bspwm (to move the window from shell)
-* xrandr (to get screen info)
-* xwininfo, xdotool (to get window info)
+### For MacOS
+* chunkwm
+* a script or plugin to manage floating windows in chunkwm
+
 * vim >7.4 (for some of the buffer stuff)
 * normal shell stuff like awk, head, cut
 
