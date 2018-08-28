@@ -5,8 +5,8 @@
 
 let s:os_name = system("uname -s")
 
-if get(g:, "vimty_float_cmd", 0)
-    let s:float_cmd = g:vimty_float_cmd
+if !empty(get(g:, "vimty#float_cmd", ""))
+    let s:float_cmd = g:vimty#float_cmd
 else
     let s:float_cmd = "$HOME/.config/scripts/chunk_float.sh"
 endif
@@ -67,18 +67,18 @@ function! TypewriterMove()
 
     " Account for negative 'leftness'
     if left > 0
-        let k = system(s:float_cmd . " move -x " . left)
+        let k = system(s:float_cmd." move -x ".left)
     elseif left < 0
         let left  = 0 - left
-        let k = system(s:float_cmd . " move +x ".left)
+        let k = system(s:float_cmd." move +x ".left)
     endif
 
     " Account for negative 'topness'
     if up > 0
-        let k = system(s:float_cmd . " move -y ".up)
+        let k = system(s:float_cmd." move -y ".up)
     elseif up < 0
         let up  = 0 - up
-        let k = system(s:float_cmd . " move +y ".up)
+        let k = system(s:float_cmd." move +y ".up)
     endif
 
     " Update values
