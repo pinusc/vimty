@@ -1,7 +1,7 @@
 function! Typewriter ()
-    let a:cursor_pos = getpos(".")
-    let g:cx = a:cursor_pos[2]
-    let g:cy = a:cursor_pos[1]
+    let b:cursor_pos = getpos(".")
+    let g:cx = b:cursor_pos[2]
+    let g:cy = b:cursor_pos[1]
     let g:topline = line("w0")
 
     " Screen size.
@@ -38,9 +38,10 @@ endfunction
 
 function! TypewriterMove()
     " Figure out the cursor delta from last positioning.
-    let a:cursor_pos = getpos(".")
-    let cx_new = a:cursor_pos[2]
-    let cy_new = a:cursor_pos[1]
+    let b:cursor_pos = getpos(".")
+    " let cx_new = b:cursor_pos[2] % &columns
+    let cx_new = virtcol('.') % &columns
+    let cy_new = b:cursor_pos[1] % &lines
     let topline_new = line("w0")
 
     " Figure out the adjustment to the location of the window.
